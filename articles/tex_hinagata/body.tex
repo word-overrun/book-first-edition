@@ -46,3 +46,10 @@ make
 
 \input{articles/<ARTICLE-DIRECTORY-NAME>/main.tex}
 \end{lstlisting}
+
+この時、もし\lstinline|\usepackage|が増えた場合は次の二つを実行してください。
+
+\begin{itemize}
+  \item リポジトリのルートにある\ovalbox{main.tex}にも\lstinline|\usepackage|を追加する
+  \item \ovalbox{.travis.yml}の\lstinline|sudo tlmgr install|に必要があればパッケージを追加する
+\end{itemize}

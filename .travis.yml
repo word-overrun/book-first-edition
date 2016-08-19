@@ -12,7 +12,7 @@ install:
   - export PATH=$PATH:/usr/texbin
   - sudo tlmgr update --self --all
   - sudo tlmgr install latexmk collection-luatex collection-langjapanese collection-fontsrecommended
-    filehook type1cm mdframed needspace unicode-math
+    filehook type1cm mdframed needspace unicode-math enumitem
   - brew install pandoc
 before_script:
   - export WORD_FONT=hiragino-pron
