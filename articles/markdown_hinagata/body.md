@@ -1,36 +1,49 @@
-# 記事の書き方
+# 記事の書き方（Markdown編）
 
-## 使い方
+## ファイル構成
 
-1. `git clone https://github.com/word-overrun/book-first-edition.git`
-2. `cd ./book-first-edtion`
-3. `git submodule update --init`
-4. `cd ./articles`
-5. `cp -r ./markdown_hinagata ./my-article-name`
-6. `cd ./my-article-name`
-7. `make`
+次のようなファイル構成になっています。
 
-これで`main.pdf`が生成されれば成功です。
-あとは`body.md`を編集すれば記事が出来ます。
+- `main-lua.tex`
+    - TeXをコンパイルするための設定があるファイル。原則、このファイルは編集しない。
+- `main.tex`
+    - Pandocによって生成されるTeXファイルを読み込むファイル。
+      このファイルではヘッダー文字列と著者名が記述されている。
+      また、このファイルはリポジトリ直下の`main.tex`から読み込まれる。
 
-## word-lua
-WORDでは新たにLuaLaTeXが使えるようになりました。
+## 記事を書く
 
-### 「文　編集部」の消し方
-LuaLaTeXでは「文　編集部」は以下のコマンドでも消すことができます。
+見出しレベル1（`#`）で書いたものが記事のタイトルになります。
+編集者の名前やヘッダなどは、TeXで制御するしかないので、
+`main.tex`を直接編集してください。
+そして、この`body.md`を編集すると記事になります。
+
+## コンパイル
+
+次のコマンドを実行するとコンパイルができます。
+
+```
+make
+```
+
+`main.pdf`が生成されれば成功です。
+
+## 記事の追加
+
+作った記事をリポジトリのルートにある`main.tex`に追加する必要がある。
+次のようなTeXプログラムを追加する。
 
 ```tex
-\authormark{}
+\setcounter{section}{0}
+\makeatletter
+\def\input@path{{./articles/<ARTICLE-DIRECTORY-NAME>/}}
+\renewcommand\includegraphics[2][]{%
+  \latexincludegraphics[#1]{./articles/<ARTICLE-DIRECTORY-NAME>/#2}
+}
+\renewcommand\bibliography[1]{%
+  \latexbibliography{./articles/<ARTICLE-DIRECTORY-NAME>/#1}
+}
+\makeatother
+
+\input{articles/<ARTICLE-DIRECTORY-NAME>/main.tex}
 ```
-
-### 偶数頁
-また、偶数頁始まりも`\documentclass`のオプションに`swapheader`をつけていただくことで簡単にできます。
-
-```TeX
-\documentclass[swapheader]{word-lua}
-%.....
-```
-
-## 質問
-[@\_yyu\_](https://twitter.com/_yyu_)へ投げると早い。word-luaに関しては[@Nymphium](https://twitter.com/Nymphium)か[@azuma962](https://twitter.com/azuma962)へ。
-

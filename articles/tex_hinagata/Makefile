@@ -4,7 +4,7 @@ LATEXMKFLAG  = -halt-on-error
 CP           = cp
 RM           = rm
 
-SRC          = main-lua
+SRC          = main
 
 TARGET       = $(addsuffix .pdf, $(SRC))
 
@@ -20,7 +20,6 @@ TEXINS       = $(addsuffix .ins, $(TEXFILES)/$(CLASS))
 .PHONY: all continue cls clean
 
 all: $(SRC).pdf
-	$(CP) $< main.pdf
 
 %.pdf: %.tex cls
 	$(LATEXMK) $(LATEXMKFLAG) $<
