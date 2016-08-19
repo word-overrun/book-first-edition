@@ -1,0 +1,55 @@
+\documentclass{word-lua}
+\usepackage{fontspec}
+\usepackage{letltxmacro}
+\usepackage[%
+  unicode=true,
+  breaklinks=true
+  bookmarks=true,
+  colorlinks=true]{hyperref}
+\usepackage{graphics}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily,
+  commentstyle=\textit,
+  frame=trBL,
+  numbers=left,
+  breaklines=true,                 % sets automatic line breaking
+  language=TeX,                 % the language of the code
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+\usepackage{fancybox}
+\usepackage{url}
+
+\LetLtxMacro\latexincludegraphics\includegraphics
+\LetLtxMacro\latexbibliography\bibliography
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\begin{document}
+
+\makeatletter
+\def\input@path{{./articles/tex_hinagata/}}
+\renewcommand\includegraphics[2][]{%
+  \latexincludegraphics[#1]{./articles/tex_hinagata/#2}
+}
+\renewcommand\bibliography[1]{%
+  \latexbibliography{./articles/tex_hinagata/#1}
+}
+\makeatother
+
+\input{articles/tex_hinagata/body.tex}
+
+\makeatletter
+\def\input@path{{./articles/markdown_hinagata/}}
+\renewcommand\includegraphics[2][]{%
+  \latexincludegraphics[#1]{./articles/markdown_hinagata/#2}
+}
+\renewcommand\bibliography[1]{%
+  \latexbibliography{./articles/markdown_hinagata/#1}
+}
+\makeatother
+
+\input{articles/markdown_hinagata/main.tex}
+
+\end{document}

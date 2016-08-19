@@ -1,0 +1,38 @@
+os:
+  - osx
+cache:
+  directories:
+    - "$HOME/Library/texlive/2016basic/texmf-var/luatex-cache"
+before_install:
+  - brew update
+install:
+  - curl -L -O http://mirrors.concertpass.com/tex-archive/systems/mac/mactex/BasicTeX.pkg
+  - sudo installer -pkg BasicTeX.pkg -target /
+  - rm BasicTeX.pkg
+  - export PATH=$PATH:/usr/texbin
+  - sudo tlmgr update --self --all
+  - sudo tlmgr install latexmk collection-luatex collection-langjapanese collection-fontsrecommended
+    filehook type1cm mdframed needspace unicode-math
+  - brew install pandoc
+before_script:
+  - export WORD_FONT=hiragino-pron
+script:
+  - make
+after_success:
+  - echo -e "Host github.com\n\tStrictHostKeyChecking no\nIdentityFile ~/.ssh/deploy.key\n" >> ~/.ssh/config
+  - openssl aes-256-cbc -k "$SERVER_KEY" -in deploy_key.enc -d -a -out deploy.key
+  - cp deploy.key ~/.ssh/
+  - chmod 600 ~/.ssh/deploy.key
+  - git config --global user.email "m@yyu.pw"
+  - git config --global user.name "Travis CI"
+  - git fetch origin gh-pages:gh-pages
+  - git stash -a
+  - git checkout gh-pages
+  - rm -rf main.pdf articles/*/main.pdf
+  - git stash pop
+  - git add main.pdf articles/*/main.pdf
+  - git commit -a -m "auto commit on travis $TRAVIS_JOB_NUMBER $TRAVIS_COMMIT"
+  - git push git@github.com:word-overrun/book-first-edition.git gh-pages:gh-pages
+env:
+  global:
+    secure: W8oKhZRc0ws1lcIp/Jz4A4SZIW3pU1/2Z+5EMJiU4b+eppbpAcfHzSkyNh3Y8f3oCtBg3oviXtefNuZJ2MV0PSkdSRt+SnHy12VQ3QN10OzDjnt6YwmUfNvwteoCp/zR10Agl5nxn6sAvrSV59DXzye0ap/BoCdYdIsmVtx5iGkwGSWAaj1q9brP4LTpcWcamnur4cWYJYK7+deJXBs9k0SfCUMeoVsSgCb5ptE2s+X8wxSGCAjIH1n1xEBBqdmeb/fUuJr77SqJgx5n3GKYwGVyTZWRnf2tbH5/zp4l+tNZKs1gOm74agwDeA1nmu/EEjZQQGc5tY3vNgQ1gjubPTvz4pGSKGL1KrD9uX8AQUxe+ypQ+qI3GKdQvTbfceDSFWpEyDSPf425+SSYqEwJ4EM4Mnpnni5wfGwcOmVLhC81eiooTCeCLgMI4VSVZTF6l0aDN8Cs5oBVRhoiigLSGnaNJdRrEtDkZ38hWbeNVBGy3oQdhJ2eJWdSlCTa6ice9lMDSNoJWqYJ5HKi++t5I7/vRvMVoXfFwxXerqAGsj9Y+/5f7O1EAnmkb7/VGWdEb2LU/JL1pHj5/Y9QAC1OCUNQfw8BRwwXrJgS0nPu/ZFX3Y4hSN/EZzj9QJE6zWdFWfjZvmX/KpBIWjsOjliVaa6SNnWzqn4stKkOcuU/iyI=
